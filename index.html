@@ -6,103 +6,171 @@
 <title>新生儿保险怎么买？条款级选购决策页（实战完整版）</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 <style>
+  :root{
+    --c-bg:#eef1f6; --c-surface:#ffffff;
+    --c-ink:#1f2733; --c-ink-soft:#56616f; --c-muted:#8a96a6;
+    --c-line:#e7ebf1;
+    --c-primary:#1B5FA8; --c-primary-d:#16467f; --c-primary-soft:#EAF2FB;
+    --c-danger:#C0392B; --c-danger-soft:#fdecea;
+    --c-warn:#E08A1E; --c-warn-soft:#fdf3e3;
+    --c-success:#2E8B57; --c-success-soft:#eaf6ee;
+    /* 三层险种签名色：重疾=紫 / 医疗=青 / 意外=琥珀 */
+    --c-critical:#7B5EA7; --c-critical-soft:#f4eefa;
+    --c-medical:#1B9C8E;  --c-medical-soft:#e6f6f3;
+    --c-accident:#E09F3E; --c-accident-soft:#fcf3e3;
+    --radius:16px; --radius-sm:10px;
+    --shadow:0 6px 22px rgba(28,42,71,.07);
+    --maxw:1040px; --fs-base:15px;
+  }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; background:#f5f7fa; color:#222; line-height:1.65; }
-  .wrap { max-width:1000px; margin:0 auto; padding:24px 16px 60px; }
-  header { text-align:center; padding:30px 0 10px; }
-  header h1 { font-size:27px; font-weight:800; letter-spacing:1px; }
-  header .sub { color:#888; margin-top:6px; font-size:13.5px; }
-  .section { background:#fff; border-radius:14px; padding:22px; margin:18px 0; box-shadow:0 2px 12px rgba(0,0,0,.05); scroll-margin-top:14px; }
-  .section h2 { font-size:20px; border-left:4px solid #1E5AA8; padding-left:10px; margin-bottom:6px; }
-  .section-desc { color:#666; font-size:13.5px; margin-bottom:14px; }
-  .lead { background:linear-gradient(135deg,#1E5AA8,#2E7DC4); color:#fff; border-radius:14px; padding:22px 24px; margin:18px 0; box-shadow:0 4px 16px rgba(30,90,168,.18); }
-  .lead h2 { color:#fff; border-left:4px solid #fff; padding-left:10px; font-size:20px; }
-  .lead ul { list-style:none; margin-top:12px; }
-  .lead li { padding:7px 0; font-size:15px; display:flex; gap:10px; align-items:flex-start; }
-  .lead li b { font-size:16px; }
-  .lead .tag { background:rgba(255,255,255,.18); border-radius:6px; padding:1px 8px; font-size:13px; white-space:nowrap; }
+  body { font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; background:var(--c-bg); color:var(--c-ink); line-height:1.7; font-size:var(--fs-base); }
+  .wrap { max-width:var(--maxw); margin:0 auto; padding:22px 16px 64px; }
+
+  /* ===== Hero ===== */
+  .hero { position:relative; overflow:hidden; background:linear-gradient(135deg,#1B5FA8 0%,#2E7DC4 55%,#1B9C8E 100%); border-radius:22px; padding:34px 30px 30px; color:#fff; box-shadow:var(--shadow); }
+  .hero::after { content:""; position:absolute; right:-60px; top:-60px; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,.10); }
+  .hero::before { content:""; position:absolute; right:40px; bottom:-80px; width:160px; height:160px; border-radius:50%; background:rgba(255,255,255,.08); }
+  .hero .badge { display:inline-block; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.34); padding:4px 13px; border-radius:999px; font-size:12.5px; margin-bottom:14px; backdrop-filter:blur(2px); }
+  .hero h1 { font-size:28px; font-weight:800; letter-spacing:.5px; line-height:1.32; position:relative; }
+  .hero .sub { opacity:.94; margin-top:11px; font-size:14px; position:relative; }
+
+  /* ===== 通用区块 ===== */
+  .section { background:var(--c-surface); border-radius:var(--radius); padding:24px; margin:18px 0; box-shadow:var(--shadow); scroll-margin-top:14px; border:1px solid var(--c-line); }
+  .section h2 { font-size:20px; color:var(--c-ink); margin-bottom:8px; display:flex; align-items:center; gap:9px; flex-wrap:wrap; }
+  .section h2::before { content:""; width:5px; height:21px; border-radius:3px; background:linear-gradient(var(--c-primary),var(--c-medical)); flex:none; }
+  .section-desc { color:var(--c-ink-soft); font-size:13.5px; margin-bottom:14px; }
+
+  .toolbar { text-align:right; margin:12px 0 0; }
+  .btn-print { background:var(--c-primary); color:#fff; border:none; border-radius:9px; padding:8px 16px; font-size:13.5px; cursor:pointer; transition:.15s; }
+  .btn-print:hover { background:var(--c-primary-d); }
+
+  /* 铁律呼应标签（前后呼应视觉线） */
+  .echo { display:inline-block; font-size:11px; font-weight:700; color:var(--c-primary); border:1px solid var(--c-primary); border-radius:6px; padding:1px 7px; margin-left:8px; vertical-align:middle; white-space:nowrap; }
+
+  /* ===== 三条铁律（lead） ===== */
+  .lead { background:linear-gradient(180deg,var(--c-primary-soft),#fff); border:1px solid #d4e4f7; border-radius:var(--radius); padding:22px 24px; margin:18px 0; box-shadow:var(--shadow); }
+  .lead h2 { color:var(--c-primary); }
+  .rules { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:14px; }
+  .rule { background:#fff; border:1px solid #dbe7f6; border-left:4px solid var(--c-primary); border-radius:12px; padding:14px 15px; }
+  .rule .lab { display:inline-block; font-size:11px; font-weight:700; color:var(--c-primary); background:var(--c-primary-soft); border-radius:6px; padding:2px 9px; margin-bottom:7px; }
+  .rule p { font-size:13.5px; color:var(--c-ink); }
+  .rule b { color:var(--c-primary-d); }
 
   /* 术语 tooltip */
-  .term { border-bottom:1px dotted #1E5AA8; cursor:help; position:relative; color:#1E5AA8; font-weight:600; }
-  .term:hover::after { content:attr(data-tip); position:absolute; left:50%; bottom:140%; transform:translateX(-50%); width:230px; background:#222; color:#fff; font-size:12px; font-weight:400; line-height:1.5; padding:8px 10px; border-radius:8px; z-index:50; box-shadow:0 4px 14px rgba(0,0,0,.25); }
-  .term:hover::before { content:""; position:absolute; left:50%; bottom:140%; transform:translate(-50%,100%); border:6px solid transparent; border-top-color:#222; z-index:50; }
+  .term { border-bottom:1px dotted var(--c-primary); cursor:help; position:relative; color:var(--c-primary); font-weight:600; }
+  .term:hover::after { content:attr(data-tip); position:absolute; left:50%; bottom:140%; transform:translateX(-50%); width:240px; background:var(--c-ink); color:#fff; font-size:12px; font-weight:400; line-height:1.55; padding:9px 11px; border-radius:9px; z-index:50; box-shadow:0 6px 18px rgba(0,0,0,.28); }
+  .term:hover::before { content:""; position:absolute; left:50%; bottom:140%; transform:translate(-50%,100%); border:6px solid transparent; border-top-color:var(--c-ink); z-index:50; }
 
-  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
-  .card { border:1px solid #eee; border-radius:12px; padding:15px; }
-  .card h3 { font-size:16px; margin-bottom:4px; color:#1E5AA8; }
-  .card .role { font-size:13px; color:#555; margin-bottom:8px; }
-  .card .row { font-size:13px; padding:5px 0; border-bottom:1px dashed #f0f0f0; }
-  .card .row span { color:#888; }
-  .card .row b { color:#222; }
-  .card .warn { color:#C0392B; font-size:12.5px; margin-top:8px; background:#fff4f4; border-radius:8px; padding:6px 8px; }
-  .card .tip { color:#1E5AA8; font-size:12.5px; margin-top:8px; background:#f0f6fc; border-radius:8px; padding:6px 8px; }
+  /* ===== 目录 ===== */
+  .toc { background:#fbfdff; border:1px solid #d8e6f5; border-radius:var(--radius); padding:16px 18px; margin:16px 0; }
+  .toc h2 { font-size:16px; margin-bottom:10px; padding-left:9px; border-left:4px solid var(--c-primary); }
+  .toc a { display:inline-block; margin:4px 8px 4px 0; color:var(--c-primary); text-decoration:none; font-size:13px; background:var(--c-primary-soft); padding:4px 11px; border-radius:999px; transition:.15s; }
+  .toc a:hover { background:var(--c-primary); color:#fff; }
+
+  /* ===== 三层商业险卡片（签名色） ===== */
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; }
+  .card { border:1px solid var(--c-line); border-radius:13px; padding:16px; background:#fff; }
+  .card--critical { border-top:4px solid var(--c-critical); }
+  .card--medical  { border-top:4px solid var(--c-medical); }
+  .card--accident { border-top:4px solid var(--c-accident); }
+  .card h3 { font-size:16px; margin-bottom:6px; display:flex; align-items:center; gap:7px; }
+  .card--critical h3 { color:var(--c-critical); }
+  .card--medical h3  { color:var(--c-medical); }
+  .card--accident h3 { color:var(--c-accident); }
+  .card .role { font-size:13px; color:var(--c-ink-soft); margin-bottom:9px; }
+  .card .row { font-size:13px; padding:6px 0; border-bottom:1px dashed #f0f2f6; }
+  .card .row span { color:var(--c-muted); }
+  .card .row b { color:var(--c-ink); }
+  .card .warn { color:var(--c-danger); font-size:12.5px; margin-top:9px; background:var(--c-danger-soft); border-radius:9px; padding:7px 9px; }
+  .card .tip { color:var(--c-primary); font-size:12.5px; margin-top:9px; background:var(--c-primary-soft); border-radius:9px; padding:7px 9px; }
+
+  /* ===== 三大坑 ===== */
   .pit { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; }
-  .pit .p { background:#fff6f6; border:1px solid #f3d4d4; border-radius:12px; padding:15px; }
-  .pit .p h3 { color:#C0392B; font-size:15.5px; margin-bottom:6px; }
+  .pit .p { background:var(--c-danger-soft); border:1px solid #f3d4d4; border-radius:13px; padding:16px; }
+  .pit .p h3 { color:var(--c-danger); font-size:15.5px; margin-bottom:8px; }
   .pit .p .bad { font-size:13px; color:#a33; }
-  .pit .p .good { font-size:13px; color:#2E7D32; margin-top:6px; }
-  table { width:100%; border-collapse:collapse; font-size:13.5px; margin-top:8px; }
-  th,td { border:1px solid #e8e8e8; padding:9px 10px; text-align:left; vertical-align:top; }
-  th { background:#1E5AA8; color:#fff; font-weight:600; }
-  tr:nth-child(even) td { background:#fafcff; }
-  .callout { border-radius:10px; padding:12px 14px; margin-top:14px; font-size:13.5px; }
-  .callout.blue { background:#eef4fb; border:1px solid #cfe0f5; }
-  .callout.warn { background:#fff4e6; border:1px solid #f6d9b0; }
-  .callout.green { background:#eef9ef; border:1px solid #cfe9d2; }
-  .callout b { color:#1E5AA8; }
-  .callout.warn b { color:#C0392B; }
-  .disclaimer { font-size:12px; color:#999; margin-top:18px; padding:14px; background:#f7f7f7; border-radius:10px; line-height:1.7; }
+  .pit .p .good { font-size:13px; color:var(--c-success); margin-top:7px; }
 
+  /* ===== 表格 ===== */
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin-top:8px; overflow:hidden; border-radius:10px; }
+  th,td { border:1px solid #e8e8e8; padding:10px 11px; text-align:left; vertical-align:top; }
+  th { background:var(--c-primary); color:#fff; font-weight:600; }
+  tr:nth-child(even) td { background:#fafcff; }
+  tbody tr:hover td { background:var(--c-primary-soft); }
+
+  /* ===== callout ===== */
+  .callout { border-radius:11px; padding:13px 15px; margin-top:14px; font-size:13.5px; }
+  .callout.blue { background:var(--c-primary-soft); border:1px solid #cfe0f5; }
+  .callout.warn { background:var(--c-warn-soft); border:1px solid #f6d9b0; }
+  .callout.green { background:var(--c-success-soft); border:1px solid #cfe9d2; }
+  .callout b { color:var(--c-primary); }
+  .callout.warn b { color:var(--c-danger); }
+  .callout.green b { color:var(--c-success); }
+
+  .disclaimer { font-size:12px; color:var(--c-muted); margin-top:20px; padding:16px; background:#f4f6fa; border:1px solid var(--c-line); border-left:4px solid var(--c-muted); border-radius:11px; line-height:1.75; }
+
+  /* ===== 图表 ===== */
   .funnel-box { width:100%; height:360px; }
   .pie-box { width:100%; height:320px; }
   .sankey-box { width:100%; height:420px; }
-  .chart-s { font-size:13.5px; color:#555; background:#f0f4fa; border-radius:10px; padding:12px 14px; margin-top:12px; }
+  .chart-s { font-size:13.5px; color:var(--c-ink-soft); background:#f0f4fa; border:1px solid var(--c-line); border-radius:11px; padding:12px 14px; margin-top:12px; }
+
+  /* ===== 关键词 ===== */
   .keyword { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
-  .kw { background:#fafafa; border:1px solid #eee; border-radius:10px; padding:12px; }
-  .kw h4 { color:#1E5AA8; font-size:14px; margin-bottom:4px; }
-  .kw p { font-size:12.5px; color:#555; }
-  .deny-list li { font-size:13.5px; padding:6px 0; border-bottom:1px dashed #eee; }
+  .kw { background:#fafbfc; border:1px solid var(--c-line); border-radius:11px; padding:13px; }
+  .kw h4 { color:var(--c-primary); font-size:14px; margin-bottom:5px; }
+  .kw p { font-size:12.5px; color:var(--c-ink-soft); }
+
+  .deny-list { margin-left:18px; }
+  .deny-list li { font-size:13.5px; padding:6px 0; border-bottom:1px dashed var(--c-line); }
+
+  /* ===== 买前必问 / FAQ 序号 ===== */
   .qa-list { counter-reset:qa; }
-  .qa-list li { counter-increment:qa; list-style:none; padding:8px 0 8px 28px; position:relative; font-size:13.5px; border-bottom:1px dashed #eee; }
-  .qa-list li::before { content:counter(qa); position:absolute; left:0; top:8px; background:#1E5AA8; color:#fff; width:20px; height:20px; border-radius:50%; text-align:center; line-height:20px; font-size:12px; }
+  .qa-list li { counter-increment:qa; list-style:none; padding:9px 0 9px 30px; position:relative; font-size:13.5px; border-bottom:1px dashed var(--c-line); }
+  .qa-list li::before { content:counter(qa); position:absolute; left:0; top:9px; background:var(--c-primary); color:#fff; width:21px; height:21px; border-radius:50%; text-align:center; line-height:21px; font-size:12px; }
+  .faq-item { font-size:13.5px; padding:9px 0; border-bottom:1px dashed var(--c-line); }
 
-  /* 目录 */
-  .toc { background:#fbfdff; border:1px solid #d8e6f5; border-radius:14px; padding:16px 18px; margin:16px 0; }
-  .toc h2 { font-size:16px; margin-bottom:10px; border-left:4px solid #1E5AA8; padding-left:10px; }
-  .toc a { display:inline-block; margin:4px 8px 4px 0; color:#1E5AA8; text-decoration:none; font-size:13px; background:#eef4fb; padding:4px 10px; border-radius:20px; }
-  .toc a:hover { background:#1E5AA8; color:#fff; }
+  /* ===== 决策时间线 ===== */
+  .timeline { position:relative; padding-left:28px; margin-top:8px; }
+  .timeline::before { content:""; position:absolute; left:10px; top:8px; bottom:8px; width:2px; background:linear-gradient(var(--c-primary),var(--c-medical)); }
+  .tl-item { position:relative; padding:6px 0 15px; }
+  .tl-item::before { content:""; position:absolute; left:-22px; top:11px; width:13px; height:13px; border-radius:50%; background:var(--c-primary); border:2px solid #fff; box-shadow:0 0 0 2px #cfe0f5; }
+  .tl-item h4 { font-size:14.5px; color:var(--c-primary); }
+  .tl-item p { font-size:13px; color:var(--c-ink-soft); margin-top:3px; }
 
-  /* 决策时间线 */
-  .timeline { position:relative; padding-left:26px; margin-top:6px; }
-  .timeline::before { content:""; position:absolute; left:9px; top:6px; bottom:6px; width:2px; background:#cfe0f5; }
-  .tl-item { position:relative; padding:6px 0 14px; }
-  .tl-item::before { content:""; position:absolute; left:-21px; top:10px; width:12px; height:12px; border-radius:50%; background:#1E5AA8; border:2px solid #fff; box-shadow:0 0 0 2px #cfe0f5; }
-  .tl-item h4 { font-size:14px; color:#1E5AA8; }
-  .tl-item p { font-size:13px; color:#555; margin-top:2px; }
+  /* ===== 回到顶部 ===== */
+  #toTop { position:fixed; right:18px; bottom:18px; width:46px; height:46px; border-radius:50%; background:var(--c-primary); color:#fff; border:none; font-size:21px; cursor:pointer; box-shadow:0 5px 16px rgba(0,0,0,.25); display:none; z-index:60; transition:.15s; }
+  #toTop:hover { background:var(--c-primary-d); }
 
-  /* 浮动回到顶部 */
-  #toTop { position:fixed; right:18px; bottom:18px; width:44px; height:44px; border-radius:50%; background:#1E5AA8; color:#fff; border:none; font-size:20px; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.25); display:none; z-index:60; }
-  #toTop:hover { background:#16467f; }
-
-  .toolbar { text-align:right; margin:10px 0 0; }
-  .btn-print { background:#1E5AA8; color:#fff; border:none; border-radius:8px; padding:8px 16px; font-size:13.5px; cursor:pointer; }
-  .btn-print:hover { background:#16467f; }
+  @media (max-width:680px){
+    .wrap{ padding:14px 12px 48px; }
+    .hero{ padding:26px 20px; border-radius:18px; }
+    .hero h1{ font-size:23px; }
+    .section{ padding:18px 15px; }
+    .rules{ grid-template-columns:1fr; }
+    .section h2{ font-size:18px; }
+  }
 
   @media print {
-    body { background:#fff; }
-    .toc, .toolbar, .chart-s, #toTop { display:none; }
+    body { background:#fff; font-size:12px; }
+    .hero { background:#fff !important; color:#1f2733; border:1px solid #ccc; box-shadow:none; }
+    .hero .badge { display:none; }
+    .toc, .toolbar, .chart-s, #toTop, .echo { display:none; }
     .section { box-shadow:none; border:1px solid #ddd; break-inside:avoid; }
     .wrap { max-width:100%; }
+    .lead { background:#f4f8fd; box-shadow:none; }
   }
 </style>
 </head>
 <body>
 <button id="toTop" title="回到顶部">↑</button>
 <div class="wrap">
-  <header>
+
+  <div class="hero">
+    <span class="badge">硬核科普 · 条款级决策手册</span>
     <h1>新生儿保险怎么买？条款级选购决策页（实战完整版）</h1>
     <div class="sub">葵爸 · 硬核科普派｜讲透「医保内外 / 免赔额 / 用药限制 / 体况告知 / 理赔实操」· 更新于 2026-08</div>
-  </header>
+  </div>
 
   <div class="toolbar"><button class="btn-print" onclick="window.print()">🖨 打印 / 存 PDF</button></div>
 
@@ -124,14 +192,14 @@
     <a href="#faq">FAQ</a><a href="#medicare">落地险</a>
   </div>
 
-  <!-- 核心结论 -->
+  <!-- 核心结论：三条铁律 -->
   <div class="lead" id="rules">
     <h2>先记住这 3 条铁律</h2>
-    <ul>
-      <li><span class="tag">顺序</span><span><b>先国家医保，后商业险。</b>娃一出生先把「落地险/居民医保」办了，再谈商业险。</span></li>
-      <li><span class="tag">主次</span><span><b>先保大人，再保小孩。</b>经济支柱（父母）才是娃最大的「保险」。</span></li>
-      <li><span class="tag">取舍</span><span><b>不急着买寿险/返还型。</b>保障型（消费型）优先，钱少也能把保额做高。</span></li>
-    </ul>
+    <div class="rules">
+      <div class="rule"><span class="lab">顺序</span><p><b>先国家医保，后商业险。</b>娃一出生先把「落地险/居民医保」办了，再谈商业险。</p></div>
+      <div class="rule"><span class="lab">主次</span><p><b>先保大人，再保小孩。</b>经济支柱（父母）才是娃最大的「保险」。</p></div>
+      <div class="rule"><span class="lab">取舍</span><p><b>不急着买寿险/返还型。</b>保障型（消费型）优先，钱少也能把保额做高。</p></div>
+    </div>
   </div>
 
   <!-- 医保不是万能的：费用缺口桑基图 -->
@@ -158,7 +226,7 @@
     <div class="chart-s">示意拆分：经济支柱（父母）约 70%，孩子约 30%。逻辑——大人出事对家庭现金流冲击远大于孩子，先堵最大的窟窿。</div>
   </div>
 
-  <!-- 新生儿投保特殊实务（NEW） -->
+  <!-- 新生儿投保特殊实务 -->
   <div class="section" id="newborn">
     <h2>📌 新生儿投保特殊实务（新手爸妈最容易忽略）</h2>
     <p class="section-desc">这是新手爸妈咨询最高频、也最容易踩坑的环节。商业健康险对新生儿有硬门槛和核保流程，跟大人投保不一样。</p>
@@ -176,25 +244,25 @@
     </div>
   </div>
 
-  <!-- 决策时间线（NEW） -->
+  <!-- 决策时间线 -->
   <div class="section" id="timeline">
     <h2>🗺 新手决策时间线：一眼看清先后节点</h2>
     <p class="section-desc">把「铁律 + 新生儿实务」串成一条时间线。照着走，基本不会漏关键步骤、也不会买错顺序。需要完整板块请配合上方「目录」跳转。</p>
     <div class="timeline">
-      <div class="tl-item"><h4>① 出生当天：办「落地险」（居民医保）</h4><p>出生后尽快办，国家层面原则为出生后 <b>90 天内</b>参保（部分地区窗口可能更宽，如 6 个月内，以当地医保局最新发布为准），按时办可<b>追溯报销出生起住院费</b>。</p></div>
+      <div class="tl-item"><h4>① 出生当天：办「落地险」（居民医保）<span class="echo">呼应·铁律①</span></h4><p>出生后尽快办，国家层面原则为出生后 <b>90 天内</b>参保（部分地区窗口可能更宽，如 6 个月内，以当地医保局最新发布为准），按时办可<b>追溯报销出生起住院费</b>。</p></div>
       <div class="tl-item"><h4>② 满 28 天 + 健康出院</h4><p>这是绝大多数重疾/百万医疗的<b>投保硬门槛</b>；0–27 天基本买不了商业健康险，少数意外险满 7 天可投。</p></div>
       <div class="tl-item"><h4>③ 体况先核保（不隐瞒）</h4><p>早产/黄疸/卵圆孔/肺炎等：先试<b>智能核保</b>（线上勾选、不留拒保记录）；过不了走<b>人工核保</b>并交出院小结。结论可能是标体/除外/延期/拒保。</p></div>
-      <div class="tl-item"><h4>④ 投保「基础四件套」</h4><p>顺序：国家医保 → 百万医疗 → 少儿重疾 → 意外险；<b>大人保障优先于娃</b>。预算够重疾优先保终身或「定期+终身」组合。</p></div>
+      <div class="tl-item"><h4>④ 投保「基础四件套」<span class="echo">呼应·铁律②</span></h4><p>顺序：国家医保 → 百万医疗 → 少儿重疾 → 意外险；<b>大人保障优先于娃</b>。预算够重疾优先保终身或「定期+终身」组合。</p></div>
       <div class="tl-item"><h4>⑤ 过等待期 + 每年年检</h4><p>早买早过疾病等待期；每年家庭情况变化后<b>复核保额/保障是否还够</b>，别买完就忘。</p></div>
     </div>
   </div>
 
-  <!-- 三层商业险详解 + 条款重点 -->
+  <!-- 三层商业险详解 + 条款重点（签名色卡片） -->
   <div class="section" id="layers">
     <h2>商业险三层：解决什么问题 + 条款重点看什么</h2>
-    <p class="section-desc">三者互补不冲突。下面按「它是干嘛的」和「买时条款盯哪些」两层讲，并把常见误区一并标出。</p>
+    <p class="section-desc">三者互补不冲突。下面按「它是干嘛的」和「买时条款盯哪些」两层讲，并把常见误区一并标出（左色条=险种签名色）。</p>
     <div class="cards">
-      <div class="card">
+      <div class="card card--critical">
         <h3>① 少儿重疾险</h3>
         <div class="role"><b>作用</b>：确诊约定重疾<b>一次性给付一笔钱</b>，补家长误工/康复营养费（不是「报销医药费」）。注意：<b>并非所有重疾都「确诊即赔」</b>——部分需实施特定手术或达到条款约定状态（如严重脑中风后遗症需存活 180 天、双目失明需永久不可逆等）。</div>
         <div class="row"><span>保额：</span><b>建议 ≥30万，预算够冲50万</b></div>
@@ -202,11 +270,11 @@
         <div class="row"><span>疾病覆盖：</span><b>监管统一28种重疾必保；高发轻/中症看是否覆盖</b></div>
         <div class="row"><span>赔付次数：</span><b>单次 vs 多次；多次看<span class="term" data-tip="重疾分成多组，同组疾病只能赔1次。">分组</span>/<span class="term" data-tip="不同种重疾可多次赔付，比分组更友好。">不分组</span>、<span class="term" data-tip="同一疾病原因、同次医疗行为、同次意外伤害导致多种重疾，只赔一次。例：白血病后做骨髓移植，有三同限制可能只赔白血病，不赔重大器官移植。">三同条款</span></b></div>
         <div class="row"><span>少儿特疾：</span><b>白血病、神经母细胞瘤、<u>重症手足口病</u>、<u>严重脑炎/脑膜炎</u>、<u>严重川崎病</u>等是否额外赔</b></div>
-        <div class="row"><span>豁免：</span><b><span class="term" data-tip="投保人（父母）重疾/身故后免交后续保费。注意：附加豁免时父母也要健康告知，父母体异常可能无法附加；且豁免责任本身有等待期。">投保人豁免</span></b>：家长（投保人）若确诊重疾/身故，宝宝这份保单后续保费免交、保障继续有效（附加时父母也需健康告知，豁免本身有等待期）。</div>
+        <div class="row"><span>豁免：</span><b><span class="term" data-tip="投保人（父母）重疾/身故后免交后续保费。注意：附加豁免时父母也需健康告知，父母体异常可能无法附加；且豁免责任本身有等待期。">投保人豁免</span></b>：家长（投保人）若确诊重疾/身故，宝宝这份保单后续保费免交、保障继续有效（附加时父母也需健康告知，豁免本身有等待期）。</div>
         <div class="warn">⚠ 误区：把重疾当「报销险」、保额买太低；盲目买捆绑寿险/两全的重疾，保费高保障低。</div>
         <div class="tip">✓ 优先：高保额 + 少儿特疾额外赔 + 不分组/无三同更优；慎买捆绑寿险。</div>
       </div>
-      <div class="card">
+      <div class="card card--medical">
         <h3>② 医疗险</h3>
         <div class="role"><b>作用</b>：报销住院医疗费，补医保报不了的部分（「报销型」，花多少报多少，不治病赔钱）。</div>
         <div class="row"><span>免赔额：</span><b>百万医疗<b>一般医疗年度1万</b>（很多产品<b>重疾医疗0免赔</b>）；小额医疗0免赔或几百</b></div>
@@ -218,7 +286,7 @@
         <div class="warn">⚠ 小额医疗险多为一年期、<b>不保证续保，产品停售即无法续</b>，仅作补充不能替代百万医疗；其报销比例多为<b>经社保约90%、未经社保约60%、常限社保内</b>（以条款为准），特药/CAR-T报销限制要看清。</div>
         <div class="tip">✓ 优先：保证续保久 + 含外购药/特药 + 含社保外 + 重疾0免赔。</div>
       </div>
-      <div class="card">
+      <div class="card card--accident">
         <h3>③ 意外险</h3>
         <div class="role"><b>作用</b>：意外身故/伤残给付 + 意外医疗报销（磕碰烫伤、摔倒、异物）。</div>
         <div class="row"><span>意外医疗：</span><b>免赔额、报销比例、是否含社保外用药</b></div>
@@ -263,7 +331,7 @@
     </ul>
   </div>
 
-  <!-- 保费参考区间（NEW） -->
+  <!-- 保费参考区间 -->
   <div class="section" id="premia">
     <h2>保费参考区间（不荐产品，只帮建立预算感）</h2>
     <p class="section-desc">下列为市场常见区间，<b>非报价</b>，受保额、保障期限、被保险人健康状况、产品形态影响很大，具体以投保时产品费率表为准。</p>
@@ -277,7 +345,7 @@
     </table>
   </div>
 
-  <!-- 报销黄金规则（NEW） -->
+  <!-- 报销黄金规则 -->
   <div class="section" id="settle">
     <h2>💡 报销黄金规则（避免少赔/拒赔）</h2>
     <p class="section-desc">家长最常问「医保和商保怎么衔接报销」。记住这 4 条，基本不会在报销环节吃亏。</p>
@@ -289,7 +357,7 @@
     </div>
   </div>
 
-  <!-- 理赔实操（NEW） -->
+  <!-- 理赔实操 -->
   <div class="section" id="claims">
     <h2>买了之后怎么赔：理赔实操</h2>
     <p class="section-desc">家长不只关心「买什么」，也关心「出事了怎么拿钱」。通用流程如下，具体以条款与保险公司指引为准。</p>
@@ -302,7 +370,7 @@
     </div>
   </div>
 
-  <!-- 如何选择保险公司（NEW） -->
+  <!-- 如何选择保险公司 -->
   <div class="section" id="company">
     <h2>不只是看产品：如何看保险公司</h2>
     <p class="section-desc">选保险是「产品 + 公司」双维度。以下为公开可查的参考维度，不唯价格、也不唯名气。</p>
@@ -348,14 +416,14 @@
       <tr><td><b>摔伤/烫伤/异物</b></td><td>+ 意外险</td><td>意外医疗免赔额、报销比例、社保内外、疫苗意外等待期</td><td>盲目追高身故保额（监管有限额）</td></tr>
       <tr><td><b>有早产/黄疸/卵圆孔</b></td><td>先人工核保再投保</td><td>如实告知、核保结论（标体/除外/延期/拒保）</td><td>隐瞒体况，未来拒赔头号原因</td></tr>
       <tr><td><b>理赔时被拒赔</b></td><td>所有险种</td><td>健康告知、等待期、免责、既往症定义</td><td>隐瞒体况、等待期内体检/住院</td></tr>
-      <tr><td><b>大人保障还没配</b></td><td><b style="color:#C0392B">停！先给经济支柱配齐</b></td><td>父母的重疾+医疗+定寿/意外</td><td>大人是娃最大的「保险」</td></tr>
+      <tr><td><b>大人保障还没配</b></td><td><b style="color:var(--c-danger)">停！先给经济支柱配齐</b> <span class="echo">呼应·铁律②</span></td><td>父母的重疾+医疗+定寿/意外</td><td>大人是娃最大的「保险」</td></tr>
     </table>
     <div class="callout warn">
       <b>📌 下单前最后 5 句大实话：</b>① 国家医保先办，商业险只是补充；② 大人是娃的「保险」，自己先配齐；③ 定期重疾有到期风险，预算够优先终身或组合；④ 宝宝有早产/住院史，优先选支持人工核保的产品，别只走智能核保；⑤ 一切「保额/保费/健康告知/免责/核保结论」以投保时条款与保险公司为准，本页不荐具体产品。
     </div>
   </div>
 
-  <!-- 中高端医疗简介（NEW） -->
+  <!-- 中高端医疗简介 -->
   <div class="section" id="midhigh">
     <h2>延伸：中高端医疗险（预算充足家庭可选）</h2>
     <p class="section-desc">一线城市或对就医品质有要求的家庭，可能在意特需/国际部、私立医院、直付体验。</p>
@@ -376,7 +444,7 @@
         <div class="good">✓ 先把大人的重疾+医疗+定寿/意外配齐，再配娃。</div>
       </div>
       <div class="p">
-        <h3>坑2 · 买返还型/寿险</h3>
+        <h3>坑2 · 买返还型/寿险 <span class="echo">呼应·铁律③</span></h3>
         <div class="bad">✗ 保费高、保障低、收益未必好，钱被锁死。</div>
         <div class="good">✓ 保障型（消费型）优先，同样的钱保额能翻几倍。</div>
       </div>
@@ -389,16 +457,16 @@
     <div class="callout warn"><b>教育金提醒：</b>教育金/寿险非保障刚需，预算紧可暂缓；若配置，务必先配齐医保+重疾+医疗+意外全部基础保障。<b>教育金流动性弱，前期退保损失大，不要优先购买。</b><br>同理，长期重疾险前几年<b>现金价值也很低</b>，中途退保同样损失大——投保前先确认家庭长期缴费能力，别冲动下单。</div>
   </div>
 
-  <!-- FAQ（NEW） -->
+  <!-- FAQ -->
   <div class="section" id="faq">
     <h2>常见问题 FAQ</h2>
-    <div class="qa-list" style="counter-reset:none;">
-      <p style="font-size:13.5px;padding:8px 0;border-bottom:1px dashed #eee;"><b>Q：28 天内能买商业健康险吗？</b><br>A：基本不能。绝大多数重疾/百万医疗要求出生满 28 天且健康出院；少数意外险满 7 天可投。先办落地险。</p>
-      <p style="font-size:13.5px;padding:8px 0;border-bottom:1px dashed #eee;"><b>Q：早产儿能买吗？</b><br>A：多数需满 28 天且健康出院，早产/低体重常触发核保，可能延期或需人工核保，结论以保险公司为准。</p>
-      <p style="font-size:13.5px;padding:8px 0;border-bottom:1px dashed #eee;"><b>Q：有黄疸能买吗？</b><br>A：生理性黄疸消退后通常可标体；病理性黄疸需提供病历资料走核保，勿隐瞒。</p>
-      <p style="font-size:13.5px;padding:8px 0;border-bottom:1px dashed #eee;"><b>Q：卵圆孔未闭能买吗？</b><br>A：多数 ≤3mm 且有自愈趋势可标体或除外，需核保；具体看缺损大小与复查结果。</p>
-      <p style="font-size:13.5px;padding:8px 0;border-bottom:1px dashed #eee;"><b>Q：医保和商保怎么衔接报销？</b><br>A：先社保结算，拿结算单给商保报「剩余部分」；百万医疗未经社保结算报销比例会降。</p>
-      <p style="font-size:13.5px;padding:8px 0;"><b>Q：定期重疾到期买不到怎么办？</b><br>A：预算够优先终身，或「定期+终身」组合锁部分终身保障；别等到期前才补。</p>
+    <div>
+      <p class="faq-item"><b>Q：28 天内能买商业健康险吗？</b><br>A：基本不能。绝大多数重疾/百万医疗要求出生满 28 天且健康出院；少数意外险满 7 天可投。先办落地险。</p>
+      <p class="faq-item"><b>Q：早产儿能买吗？</b><br>A：多数需满 28 天且健康出院，早产/低体重常触发核保，可能延期或需人工核保，结论以保险公司为准。</p>
+      <p class="faq-item"><b>Q：有黄疸能买吗？</b><br>A：生理性黄疸消退后通常可标体；病理性黄疸需提供病历资料走核保，勿隐瞒。</p>
+      <p class="faq-item"><b>Q：卵圆孔未闭能买吗？</b><br>A：多数 ≤3mm 且有自愈趋势可标体或除外，需核保；具体看缺损大小与复查结果。</p>
+      <p class="faq-item"><b>Q：医保和商保怎么衔接报销？</b><br>A：先社保结算，拿结算单给商保报「剩余部分」；百万医疗未经社保结算报销比例会降。</p>
+      <p class="faq-item"><b>Q：定期重疾到期买不到怎么办？</b><br>A：预算够优先终身，或「定期+终身」组合锁部分终身保障；别等到期前才补。</p>
     </div>
   </div>
 
@@ -456,7 +524,7 @@ sankey.setOption({
 const funnel = echarts.init(document.getElementById('funnelChart'));
 funnel.setOption({
   tooltip:{ trigger:'item', formatter:'{b}<br/>优先级（科普模型）：{c}' },
-  color:['#1E5AA8','#2E7DC4','#4A9BD8','#7FB8E0','#B8D4EC'],
+  color:['#1B5FA8','#2E7DC4','#1B9C8E','#7FB8E0','#B8D4EC'],
   series:[{
     type:'funnel', top:20, bottom:20, left:'8%', right:'8%', min:0, max:100,
     sort:'descending', gap:3, label:{ show:true, position:'inside', formatter:'{b}', color:'#fff', fontSize:14, fontWeight:600 },
@@ -476,7 +544,7 @@ const pie = echarts.init(document.getElementById('pie'));
 pie.setOption({
   tooltip:{ trigger:'item', formatter:'{b}：{d}%' },
   legend:{ bottom:0 },
-  color:['#1E5AA8','#F39C12'],
+  color:['#1B5FA8','#E08A1E'],
   series:[{
     type:'pie', radius:['42%','68%'], center:['50%','46%'],
     label:{ formatter:'{b}\n{d}%', fontSize:13 },
