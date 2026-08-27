@@ -97,6 +97,7 @@
 </style>
 </head>
 <body>
+<button id="toTop" title="回到顶部">↑</button>
 <div class="wrap">
   <header>
     <h1>新生儿保险怎么买？条款级选购决策页（实战完整版）</h1>
@@ -145,7 +146,7 @@
   <div class="section" id="funnel">
     <h2>配置优先级：从「必做」到「最后考虑」</h2>
     <p class="section-desc">漏斗越靠上越该先办、越刚需。国家医保是地基，商业险按「大额医疗→收入中断→意外」依次补，教育金/寿险放最后。</p>
-    <div id="funnel" class="funnel-box"></div>
+    <div id="funnelChart" class="funnel-box"></div>
     <div class="chart-s">优先级为作者科普模型。国家医保与百万医疗解决「治不起」；重疾险解决「大人请假/收入断档」；意外险补磕碰烫伤；教育金/寿险非保障刚需，预算紧可暂缓。</div>
   </div>
 
@@ -438,7 +439,7 @@ sankey.setOption({
 });
 
 // ===== 配置优先级漏斗 =====
-const funnel = echarts.init(document.getElementById('funnel'));
+const funnel = echarts.init(document.getElementById('funnelChart'));
 funnel.setOption({
   tooltip:{ trigger:'item', formatter:'{b}<br/>优先级（科普模型）：{c}' },
   color:['#1E5AA8','#2E7DC4','#4A9BD8','#7FB8E0','#B8D4EC'],
@@ -473,9 +474,9 @@ pie.setOption({
 });
 
 window.addEventListener('resize',()=>{ sankey.resize(); funnel.resize(); pie.resize(); });
-window.addEventListener('scroll',()=>{ document.getElementById('toTop').style.display = window.scrollY>400 ? 'block':'none'; });
-document.getElementById('toTop').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+const toTopBtn = document.getElementById('toTop');
+window.addEventListener('scroll',()=>{ toTopBtn.style.display = window.scrollY>400 ? 'block':'none'; });
+toTopBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
 </script>
-<button id="toTop" title="回到顶部">↑</button>
 </body>
 </html>
