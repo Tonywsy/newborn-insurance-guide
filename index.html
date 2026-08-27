@@ -71,13 +71,26 @@
   .toc h2 { font-size:16px; margin-bottom:10px; border-left:4px solid #1E5AA8; padding-left:10px; }
   .toc a { display:inline-block; margin:4px 8px 4px 0; color:#1E5AA8; text-decoration:none; font-size:13px; background:#eef4fb; padding:4px 10px; border-radius:20px; }
   .toc a:hover { background:#1E5AA8; color:#fff; }
+
+  /* 决策时间线 */
+  .timeline { position:relative; padding-left:26px; margin-top:6px; }
+  .timeline::before { content:""; position:absolute; left:9px; top:6px; bottom:6px; width:2px; background:#cfe0f5; }
+  .tl-item { position:relative; padding:6px 0 14px; }
+  .tl-item::before { content:""; position:absolute; left:-21px; top:10px; width:12px; height:12px; border-radius:50%; background:#1E5AA8; border:2px solid #fff; box-shadow:0 0 0 2px #cfe0f5; }
+  .tl-item h4 { font-size:14px; color:#1E5AA8; }
+  .tl-item p { font-size:13px; color:#555; margin-top:2px; }
+
+  /* 浮动回到顶部 */
+  #toTop { position:fixed; right:18px; bottom:18px; width:44px; height:44px; border-radius:50%; background:#1E5AA8; color:#fff; border:none; font-size:20px; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.25); display:none; z-index:60; }
+  #toTop:hover { background:#16467f; }
+
   .toolbar { text-align:right; margin:10px 0 0; }
   .btn-print { background:#1E5AA8; color:#fff; border:none; border-radius:8px; padding:8px 16px; font-size:13.5px; cursor:pointer; }
   .btn-print:hover { background:#16467f; }
 
   @media print {
     body { background:#fff; }
-    .toc, .toolbar, .chart-s { display:none; }
+    .toc, .toolbar, .chart-s, #toTop { display:none; }
     .section { box-shadow:none; border:1px solid #ddd; break-inside:avoid; }
     .wrap { max-width:100%; }
   }
@@ -162,6 +175,19 @@
     </div>
   </div>
 
+  <!-- 决策时间线（NEW） -->
+  <div class="section" id="timeline">
+    <h2>🗺 新手决策时间线：一眼看清先后节点</h2>
+    <p class="section-desc">把「铁律 + 新生儿实务」串成一条时间线。照着走，基本不会漏关键步骤、也不会买错顺序。需要完整板块请配合上方「目录」跳转。</p>
+    <div class="timeline">
+      <div class="tl-item"><h4>① 出生当天：办「落地险」（居民医保）</h4><p>出生后尽快办，窗口期各地 28天/90天/6个月内不等（以当地医保局为准），按时办可<b>追溯报销出生起住院费</b>。</p></div>
+      <div class="tl-item"><h4>② 满 28 天 + 健康出院</h4><p>这是绝大多数重疾/百万医疗的<b>投保硬门槛</b>；0–27 天基本买不了商业健康险，少数意外险满 7 天可投。</p></div>
+      <div class="tl-item"><h4>③ 体况先核保（不隐瞒）</h4><p>早产/黄疸/卵圆孔/肺炎等：先试<b>智能核保</b>（线上勾选、不留拒保记录）；过不了走<b>人工核保</b>并交出院小结。结论可能是标体/除外/延期/拒保。</p></div>
+      <div class="tl-item"><h4>④ 投保「基础四件套」</h4><p>顺序：国家医保 → 百万医疗 → 少儿重疾 → 意外险；<b>大人保障优先于娃</b>。预算够重疾优先保终身或「定期+终身」组合。</p></div>
+      <div class="tl-item"><h4>⑤ 过等待期 + 每年年检</h4><p>早买早过疾病等待期；每年家庭情况变化后<b>复核保额/保障是否还够</b>，别买完就忘。</p></div>
+    </div>
+  </div>
+
   <!-- 三层商业险详解 + 条款重点 -->
   <div class="section" id="layers">
     <h2>商业险三层：解决什么问题 + 条款重点看什么</h2>
@@ -175,7 +201,7 @@
         <div class="row"><span>疾病覆盖：</span><b>监管统一28种重疾必保；高发轻/中症看是否覆盖</b></div>
         <div class="row"><span>赔付次数：</span><b>单次 vs 多次；多次看<span class="term" data-tip="重疾分成多组，同组疾病只能赔1次。">分组</span>/<span class="term" data-tip="不同种重疾可多次赔付，比分组更友好。">不分组</span>、<span class="term" data-tip="同一疾病原因、同次医疗行为、同次意外伤害导致多种重疾，只赔一次。例：白血病后做骨髓移植，有三同限制可能只赔白血病，不赔重大器官移植。">三同条款</span></b></div>
         <div class="row"><span>少儿特疾：</span><b>白血病、神经母细胞瘤、<u>重症手足口病</u>、<u>严重脑炎/脑膜炎</u>、<u>严重川崎病</u>等是否额外赔</b></div>
-        <div class="row"><span>豁免：</span><b><span class="term" data-tip="投保人（父母）重疾/身故后免交后续保费。注意：附加豁免时父母也要健康告知，父母体异常可能无法附加；且豁免责任本身有等待期。">投保人豁免</span></b></div>
+        <div class="row"><span>豁免：</span><b><span class="term" data-tip="投保人（父母）重疾/身故后免交后续保费。注意：附加豁免时父母也要健康告知，父母体异常可能无法附加；且豁免责任本身有等待期。">投保人豁免</span></b>：家长（投保人）若确诊重疾/身故，宝宝这份保单后续保费免交、保障继续有效（附加时父母也需健康告知，豁免本身有等待期）。</div>
         <div class="warn">⚠ 误区：把重疾当「报销险」、保额买太低；盲目买捆绑寿险/两全的重疾，保费高保障低。</div>
         <div class="tip">✓ 优先：高保额 + 少儿特疾额外赔 + 不分组/无三同更优；慎买捆绑寿险。</div>
       </div>
@@ -347,7 +373,7 @@
         <div class="good">✓ 如实健康告知，早买早过等待期，别拖；有体况走人工核保。</div>
       </div>
     </div>
-    <div class="callout warn"><b>教育金提醒：</b>教育金/寿险非保障刚需，预算紧可暂缓；若配置，务必先配齐医保+重疾+医疗+意外全部基础保障。<b>教育金流动性弱，前期退保损失大，不要优先购买。</b></div>
+    <div class="callout warn"><b>教育金提醒：</b>教育金/寿险非保障刚需，预算紧可暂缓；若配置，务必先配齐医保+重疾+医疗+意外全部基础保障。<b>教育金流动性弱，前期退保损失大，不要优先购买。</b><br>同理，长期重疾险前几年<b>现金价值也很低</b>，中途退保同样损失大——投保前先确认家庭长期缴费能力，别冲动下单。</div>
   </div>
 
   <!-- FAQ（NEW） -->
@@ -447,6 +473,9 @@ pie.setOption({
 });
 
 window.addEventListener('resize',()=>{ sankey.resize(); funnel.resize(); pie.resize(); });
+window.addEventListener('scroll',()=>{ document.getElementById('toTop').style.display = window.scrollY>400 ? 'block':'none'; });
+document.getElementById('toTop').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
 </script>
+<button id="toTop" title="回到顶部">↑</button>
 </body>
 </html>
