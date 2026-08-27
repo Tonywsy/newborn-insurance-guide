@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>新生儿保险怎么买？条款级选购决策页</title>
+<title>新生儿保险怎么买？条款级选购决策页（实战完整版）</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -12,7 +12,7 @@
   header { text-align:center; padding:30px 0 10px; }
   header h1 { font-size:27px; font-weight:800; letter-spacing:1px; }
   header .sub { color:#888; margin-top:6px; font-size:13.5px; }
-  .section { background:#fff; border-radius:14px; padding:22px; margin:18px 0; box-shadow:0 2px 12px rgba(0,0,0,.05); }
+  .section { background:#fff; border-radius:14px; padding:22px; margin:18px 0; box-shadow:0 2px 12px rgba(0,0,0,.05); scroll-margin-top:14px; }
   .section h2 { font-size:20px; border-left:4px solid #1E5AA8; padding-left:10px; margin-bottom:6px; }
   .section-desc { color:#666; font-size:13.5px; margin-bottom:14px; }
   .lead { background:linear-gradient(135deg,#1E5AA8,#2E7DC4); color:#fff; border-radius:14px; padding:22px 24px; margin:18px 0; box-shadow:0 4px 16px rgba(30,90,168,.18); }
@@ -21,6 +21,12 @@
   .lead li { padding:7px 0; font-size:15px; display:flex; gap:10px; align-items:flex-start; }
   .lead li b { font-size:16px; }
   .lead .tag { background:rgba(255,255,255,.18); border-radius:6px; padding:1px 8px; font-size:13px; white-space:nowrap; }
+
+  /* 术语 tooltip */
+  .term { border-bottom:1px dotted #1E5AA8; cursor:help; position:relative; color:#1E5AA8; font-weight:600; }
+  .term:hover::after { content:attr(data-tip); position:absolute; left:50%; bottom:140%; transform:translateX(-50%); width:230px; background:#222; color:#fff; font-size:12px; font-weight:400; line-height:1.5; padding:8px 10px; border-radius:8px; z-index:50; box-shadow:0 4px 14px rgba(0,0,0,.25); }
+  .term:hover::before { content:""; position:absolute; left:50%; bottom:140%; transform:translate(-50%,100%); border:6px solid transparent; border-top-color:#222; z-index:50; }
+
   .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
   .card { border:1px solid #eee; border-radius:12px; padding:15px; }
   .card h3 { font-size:16px; margin-bottom:4px; color:#1E5AA8; }
@@ -42,8 +48,11 @@
   .callout { border-radius:10px; padding:12px 14px; margin-top:14px; font-size:13.5px; }
   .callout.blue { background:#eef4fb; border:1px solid #cfe0f5; }
   .callout.warn { background:#fff4e6; border:1px solid #f6d9b0; }
+  .callout.green { background:#eef9ef; border:1px solid #cfe9d2; }
   .callout b { color:#1E5AA8; }
+  .callout.warn b { color:#C0392B; }
   .disclaimer { font-size:12px; color:#999; margin-top:18px; padding:14px; background:#f7f7f7; border-radius:10px; line-height:1.7; }
+
   .funnel-box { width:100%; height:360px; }
   .pie-box { width:100%; height:320px; }
   .sankey-box { width:100%; height:420px; }
@@ -56,17 +65,53 @@
   .qa-list { counter-reset:qa; }
   .qa-list li { counter-increment:qa; list-style:none; padding:8px 0 8px 28px; position:relative; font-size:13.5px; border-bottom:1px dashed #eee; }
   .qa-list li::before { content:counter(qa); position:absolute; left:0; top:8px; background:#1E5AA8; color:#fff; width:20px; height:20px; border-radius:50%; text-align:center; line-height:20px; font-size:12px; }
+
+  /* 目录 */
+  .toc { background:#fbfdff; border:1px solid #d8e6f5; border-radius:14px; padding:16px 18px; margin:16px 0; }
+  .toc h2 { font-size:16px; margin-bottom:10px; border-left:4px solid #1E5AA8; padding-left:10px; }
+  .toc a { display:inline-block; margin:4px 8px 4px 0; color:#1E5AA8; text-decoration:none; font-size:13px; background:#eef4fb; padding:4px 10px; border-radius:20px; }
+  .toc a:hover { background:#1E5AA8; color:#fff; }
+  .toolbar { text-align:right; margin:10px 0 0; }
+  .btn-print { background:#1E5AA8; color:#fff; border:none; border-radius:8px; padding:8px 16px; font-size:13.5px; cursor:pointer; }
+  .btn-print:hover { background:#16467f; }
+
+  @media print {
+    body { background:#fff; }
+    .toc, .toolbar, .chart-s { display:none; }
+    .section { box-shadow:none; border:1px solid #ddd; break-inside:avoid; }
+    .wrap { max-width:100%; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>新生儿保险怎么买？条款级选购决策页</h1>
-    <div class="sub">葵爸 · 硬核科普派｜本页讲透「医保内外、免赔额、用药限制、保障次数」等条款坑 · 2026-08</div>
+    <h1>新生儿保险怎么买？条款级选购决策页（实战完整版）</h1>
+    <div class="sub">葵爸 · 硬核科普派｜讲透「医保内外 / 免赔额 / 用药限制 / 体况告知 / 理赔实操」· 更新于 2026-08</div>
   </header>
 
+  <div class="toolbar"><button class="btn-print" onclick="window.print()">🖨 打印 / 存 PDF</button></div>
+
+  <!-- 内容性质 & 时效 -->
+  <div class="callout blue" style="margin-top:14px;">
+    <b>📌 关于本页 & 内容性质：</b>葵爸是母婴科普内容创作者，<b>非持牌保险经纪人/代理人，无精算、金融或医学执业资质</b>。本页是基于公开监管文件与行业共识整理的<b>个人学习笔记</b>，<b>不构成保险销售、投保或理赔建议，亦非对任何产品的推荐</b>。核保结论、保费、责任范围以保险公司经监管批复的条款及投保时如实告知为准。文中预算/费率/报销比例为通用参考，非硬性指标。<br>
+    参考依据含：《健康保险管理办法》、原保监会《重大疾病保险的疾病定义使用规范（2020年修订版）》、原保监会2015年《关于父母为其未成年子女投保以死亡为给付保险金条件人身保险有关问题的通知》、《保险法》等。<br>
+    <b>⏰ 时效提示：</b>保险产品条款、费率、核保规则及各地医保政策可能随时调整，本页更新于 2026 年 8 月，请以投保时保险公司最新条款及当地医保局官方发布为准。
+  </div>
+
+  <!-- 目录 -->
+  <div class="toc" id="toc">
+    <h2>目录（点击直达）</h2>
+    <a href="#rules">三条铁律</a><a href="#gap">医保费用缺口</a><a href="#funnel">配置优先级</a>
+    <a href="#budget">预算分配</a><a href="#newborn">新生儿投保实务</a><a href="#layers">三层商业险</a>
+    <a href="#keywords">8个条款关键词</a><a href="#deny">拒赔原因</a><a href="#premia">保费参考</a>
+    <a href="#claims">理赔实操</a><a href="#company">选公司维度</a><a href="#ask">买前必问</a>
+    <a href="#match">对号入座</a><a href="#midhigh">中高端医疗</a><a href="#pit">三大坑</a>
+    <a href="#faq">FAQ</a><a href="#medicare">落地险</a>
+  </div>
+
   <!-- 核心结论 -->
-  <div class="lead">
+  <div class="lead" id="rules">
     <h2>先记住这 3 条铁律</h2>
     <ul>
       <li><span class="tag">顺序</span><span><b>先国家医保，后商业险。</b>娃一出生先把「落地险/居民医保」办了，再谈商业险。</span></li>
@@ -76,7 +121,7 @@
   </div>
 
   <!-- 医保不是万能的：费用缺口桑基图 -->
-  <div class="section">
+  <div class="section" id="gap">
     <h2>医保不是万能的：一张图看懂「医保内外」和费用缺口</h2>
     <p class="section-desc">粉丝问得最多的「医保内/医保外能不能报」，核心在这张图里。国家医保只报「目录内」且按比例/封顶线；目录外、免赔额、既往症等缺口，才是商业险该补的地方。</p>
     <div id="sankey" class="sankey-box"></div>
@@ -84,7 +129,7 @@
   </div>
 
   <!-- 配置优先级漏斗 -->
-  <div class="section">
+  <div class="section" id="funnel">
     <h2>配置优先级：从「必做」到「最后考虑」</h2>
     <p class="section-desc">漏斗越靠上越该先办、越刚需。国家医保是地基，商业险按「大额医疗→收入中断→意外」依次补，教育金/寿险放最后。</p>
     <div id="funnel" class="funnel-box"></div>
@@ -92,105 +137,198 @@
   </div>
 
   <!-- 预算分配：先大人后小孩 -->
-  <div class="section">
+  <div class="section" id="budget">
     <h2>钱怎么分：家庭保障预算的「大人优先」原则</h2>
     <p class="section-desc">家庭年保费建议 ≈ 年收入 5%–10%（通用参考，非硬指标）。孩子部分建议不超过家庭保障预算的 1/3，钱优先留给经济支柱。</p>
     <div id="pie" class="pie-box"></div>
     <div class="chart-s">示意拆分：经济支柱（父母）约 70%，孩子约 30%。逻辑——大人出事对家庭现金流冲击远大于孩子，先堵最大的窟窿。</div>
   </div>
 
+  <!-- 新生儿投保特殊实务（NEW） -->
+  <div class="section" id="newborn">
+    <h2>📌 新生儿投保特殊实务（新手爸妈最容易忽略）</h2>
+    <p class="section-desc">这是新手爸妈咨询最高频、也最容易踩坑的环节。商业健康险对新生儿有硬门槛和核保流程，跟大人投保不一样。</p>
+    <div class="callout warn">
+      <b>① 投保年龄门槛：</b>新生儿「落地险」（居民医保）出生即可办；但<b>绝大多数重疾险、百万医疗险要求宝宝<b>出生满 28 天且健康出院</b>才能投保，0–27 天基本买不了商业健康险</b>。少数少儿意外险最低支持出生满 7 天投保。早产儿/低体重儿通常还要达到矫正胎龄或体重标准、出院后观察一段时间。
+    </div>
+    <div class="callout blue">
+      <b>② 常见体况要如实告知：</b>早产、低出生体重、黄疸住院、卵圆孔未闭、动脉导管未闭、新生儿肺炎、ABO 溶血、新生儿窒息等，都是投保高频告知项，通常需要提供<b>出院小结 / 儿保记录</b>。核保结果一般分四类：<b>标体承保（正常买）</b> / <b>除外责任（某器官或某病不赔）</b> / <b>延期承保（观察一段时间再看）</b> / <b>拒保</b>。结果以保险公司核保为准，不要隐瞒。
+    </div>
+    <div class="callout green">
+      <b>③ 实操建议：</b>先试产品「智能核保」（线上勾选，不留下拒保记录）；过不了再走<b>人工核保</b>并提供完整病历；拿不准就多家同时核保、选结论最好的。有体况的宝宝<b>不要为了顺利承保而跳过病史告知</b>——隐瞒是导致未来拒赔的头号原因。
+    </div>
+    <div class="callout warn">
+      <b>④ 百万医疗免赔的「现实」：</b>百万医疗通常<b>一般医疗年度免赔 1 万</b>（很多产品<b>重疾医疗 0 免赔</b>）。不少新生儿普通住院总花费不到 1 万，百万医疗用不上——预算允许可搭配<b>小额医疗险</b>覆盖小额住院/门诊。
+    </div>
+  </div>
+
   <!-- 三层商业险详解 + 条款重点 -->
-  <div class="section">
+  <div class="section" id="layers">
     <h2>商业险三层：解决什么问题 + 条款重点看什么</h2>
-    <p class="section-desc">三者互补不冲突。下面按「它是干嘛的」和「买时条款盯哪些」两层讲，看完不会被销售话术绕。</p>
+    <p class="section-desc">三者互补不冲突。下面按「它是干嘛的」和「买时条款盯哪些」两层讲，并把常见误区一并标出。</p>
     <div class="cards">
       <div class="card">
         <h3>① 少儿重疾险</h3>
-        <div class="role"><b>作用</b>：确诊即赔一笔钱，补家长误工/康复营养费（不是「报销医药费」）</div>
+        <div class="role"><b>作用</b>：确诊约定重疾<b>一次性给付一笔钱</b>，补家长误工/康复营养费（不是「报销医药费」）。注意：<b>并非所有重疾都「确诊即赔」</b>——部分需实施特定手术或达到条款约定状态（如严重脑中风后遗症需存活 180 天、双目失明需永久不可逆等）。</div>
         <div class="row"><span>保额：</span><b>建议 ≥30万，预算够冲50万</b></div>
-        <div class="row"><span>保障期限：</span><b>定期（保20-30年）性价比高；终身型更贵</b></div>
+        <div class="row"><span>保障期限：</span><b>定期（保20-30年）保费低、易做高保额，但属阶段性过渡：<span class="term" data-tip="定期重疾保障到期合同直接终止；若保障期内孩子留下住院/体检异常记录，到期可能买不到新的重疾险。预算够优先终身，或定期+终身组合。">到期风险</span></b></div>
         <div class="row"><span>疾病覆盖：</span><b>监管统一28种重疾必保；高发轻/中症看是否覆盖</b></div>
-        <div class="row"><span>赔付次数：</span><b>单次 vs 多次；多次看分组/不分组、「三同条款」</b></div>
-        <div class="row"><span>少儿特疾：</span><b>白血病、神经母细胞瘤等是否额外赔</b></div>
-        <div class="row"><span>豁免：</span><b>投保人豁免：父母重疾/身故后免交后续保费</b></div>
-        <div class="tip">✓ 优先：高保额 + 少儿特疾额外赔；慎买捆绑寿险/两全的。</div>
+        <div class="row"><span>赔付次数：</span><b>单次 vs 多次；多次看<span class="term" data-tip="重疾分成多组，同组疾病只能赔1次。">分组</span>/<span class="term" data-tip="不同种重疾可多次赔付，比分组更友好。">不分组</span>、<span class="term" data-tip="同一疾病原因、同次医疗行为、同次意外伤害导致多种重疾，只赔一次。例：白血病后做骨髓移植，有三同限制可能只赔白血病，不赔重大器官移植。">三同条款</span></b></div>
+        <div class="row"><span>少儿特疾：</span><b>白血病、神经母细胞瘤、<u>重症手足口病</u>、<u>严重脑炎/脑膜炎</u>、<u>严重川崎病</u>等是否额外赔</b></div>
+        <div class="row"><span>豁免：</span><b><span class="term" data-tip="投保人（父母）重疾/身故后免交后续保费。注意：附加豁免时父母也要健康告知，父母体异常可能无法附加；且豁免责任本身有等待期。">投保人豁免</span></b></div>
+        <div class="warn">⚠ 误区：把重疾当「报销险」、保额买太低；盲目买捆绑寿险/两全的重疾，保费高保障低。</div>
+        <div class="tip">✓ 优先：高保额 + 少儿特疾额外赔 + 不分组/无三同更优；慎买捆绑寿险。</div>
       </div>
       <div class="card">
         <h3>② 医疗险</h3>
-        <div class="role"><b>作用</b>：报销住院医疗费，补医保报不了的部分（是「报销型」，花多少报多少）</div>
-        <div class="row"><span>免赔额：</span><b>百万医疗通常1万/年；小额医疗0免赔或几百</b></div>
+        <div class="role"><b>作用</b>：报销住院医疗费，补医保报不了的部分（「报销型」，花多少报多少，不治病赔钱）。</div>
+        <div class="row"><span>免赔额：</span><b>百万医疗<b>一般医疗年度1万</b>（很多产品<b>重疾医疗0免赔</b>）；小额医疗0免赔或几百</b></div>
         <div class="row"><span>报销范围：</span><b>是否含社保外用药、自费药、进口药、院外特药/CAR-T</b></div>
-        <div class="row"><span>医院范围：</span><b>通常为二级及以上公立医院普通部；特需/国际部需中高端医疗</b></div>
-        <div class="row"><span>报销比例：</span><b>经社保结算后一般100%；未经社保可能只报60%</b></div>
-        <div class="row"><span>保证续保：</span><b>20年/6年/1年；到期是否需重新核保</b></div>
+        <div class="row"><span>医院范围：</span><b>通常二级及以上公立医院普通部；特需/国际部需中高端医疗</b></div>
+        <div class="row"><span>报销比例：</span><b>经社保结算后住院责任多100%；但<b>部分产品院外特药单独限比例</b>，<b>CAR-T仅赔清单内药品</b>，不等于所有CAR-T疗法都赔</b></div>
+        <div class="row"><span>保证续保：</span><b><span class="term" data-tip="保证续保≠保证终身承保：保证续保期内保险公司不因被保人健康变化/理赔而拒保；但保证续保期结束或产品停售，可能需重新核保或无法续。">保证续保≠保证承保</span></b>（20年/6年/1年）</b></div>
         <div class="row"><span>增值服务：</span><b>住院垫付、就医绿通、质子重离子</b></div>
-        <div class="tip">✓ 优先：保证续保久 + 含外购药/特药 + 含社保外。</div>
+        <div class="warn">⚠ 小额医疗险多为一年期、<b>不保证续保，产品停售即无法续</b>，仅作补充不能替代百万医疗；特药/CAR-T报销限制要看清。</div>
+        <div class="tip">✓ 优先：保证续保久 + 含外购药/特药 + 含社保外 + 重疾0免赔。</div>
       </div>
       <div class="card">
         <h3>③ 意外险</h3>
-        <div class="role"><b>作用</b>：意外身故/伤残给付 + 意外医疗报销（磕碰烫伤、摔倒、异物）</div>
+        <div class="role"><b>作用</b>：意外身故/伤残给付 + 意外医疗报销（磕碰烫伤、摔倒、异物）。</div>
         <div class="row"><span>意外医疗：</span><b>免赔额、报销比例、是否含社保外用药</b></div>
-        <div class="row"><span>身故保额：</span><b>监管限额：10岁前≤20万，10-18岁≤50万，不必追高</b></div>
+        <div class="row"><span>身故保额：</span><b>监管限额：10岁前≤20万，10-18岁≤50万，<b>不必追高</b></b></div>
         <div class="row"><span>住院津贴：</span><b>每天补多少、免赔天数几天</b></div>
-        <div class="row"><span>特定意外：</span><b>骨折/烧烫伤/误食异物、疫苗接种意外是否额外保</b></div>
-        <div class="row"><span>免责：</span><b>高风险运动、先天疾病、牙科美容通常不赔</b></div>
+        <div class="row"><span>特定意外：</span><b>骨折/烧烫伤/误食异物、<span class="term" data-tip="意外险整体多无等待期，但部分产品的疫苗接种意外责任会设单独等待期（如7-15天），留意条款。">疫苗意外等待期</span>是否额外保</b></div>
+        <div class="row"><span>免责：</span><b>高风险运动、牙科美容通常不赔</b></div>
         <div class="tip">✓ 优先：意外医疗0免赔/不限社保/100%报销。</div>
       </div>
     </div>
   </div>
 
   <!-- 看条款的 8 个关键词 -->
-  <div class="section">
+  <div class="section" id="keywords">
     <h2>看条款先盯这 8 个关键词</h2>
-    <p class="section-desc">粉丝提到的「免赔额、用药限制、医保内外、保障次数」都在这。投保前把对应条款找出来对一遍，能避开大部分纠纷。</p>
+    <p class="section-desc">粉丝提到的「免赔额、用药限制、医保内外、保障次数」都在这。投保前把对应条款找出来对一遍，能避开大部分纠纷。鼠标悬停蓝字看术语解释。</p>
     <div class="keyword">
-      <div class="kw"><h4>1. 免赔额</h4><p>百万医疗通常1万/年；小额医疗/意外医疗多为0免赔或几百。免赔额越低，越容易用到。</p></div>
-      <div class="kw"><h4>2. 报销比例</h4><p>经社保结算后通常100%，未经社保可能只报60%。投保时选「有社保」身份，但看病一定要先用医保。</p></div>
-      <div class="kw"><h4>3. 社保内外</h4><p>国家医保只报目录内。商业医疗险若能扩展社保外用药/自费药/进口药，才能真正解决「医保外」费用。</p></div>
-      <div class="kw"><h4>4. 特药/外购药</h4><p>恶性肿瘤靶向药、CAR-T 很多需院外购买。看条款是否有特药清单、是否含外购药责任。</p></div>
-      <div class="kw"><h4>5. 等待期</h4><p>疾病通常30-180天；意外一般无等待期。等待期内确诊或出险，不赔。</p></div>
-      <div class="kw"><h4>6. 既往症</h4><p>投保前已患的疾病/症状，通常除外或拒赔。健康告知务必如实，否则可能被解除合同。</p></div>
-      <div class="kw"><h4>7. 免责条款</h4><p>先天性疾病、牙科、视力、美容、高风险运动、精神疾病等常在免责里。买前翻一遍。</p></div>
-      <div class="kw"><h4>8. 续保条件</h4><p>是否保证续保、保证续保多少年、到期是否需要重新健康告知。短期医疗险停售可能无法续。</p></div>
+      <div class="kw"><h4>1. 免赔额</h4><p>百万医疗通常1万/年（重疾常0免赔）；小额/意外医疗多为0或几百。越低越容易用到。</p></div>
+      <div class="kw"><h4>2. 报销比例</h4><p>经社保结算后通常100%，未经社保可能只报60%。投保选「有社保」身份，看病一定要先用医保。</p></div>
+      <div class="kw"><h4>3. 社保内外</h4><p>国家医保只报目录内。能扩展社保外用药/自费药/进口药，才真正解决「医保外」费用。</p></div>
+      <div class="kw"><h4>4. 特药/外购药</h4><p>靶向药、CAR-T 多需院外购买。看条款特药清单、是否含外购药；CAR-T只赔清单内药。</p></div>
+      <div class="kw"><h4>5. 等待期</h4><p>疾病通常30-180天，意外一般无等待期（疫苗意外可能单独设）。等待期内出险不赔。</p></div>
+      <div class="kw"><h4>6. 既往症</h4><p>投保前已患疾病/症状，通常除外或拒赔。健康告知务必如实，否则可能被解除合同。</p></div>
+      <div class="kw"><h4>7. 免责条款</h4><p>先天性疾病（投保前未知的先天相关达重疾定义仍可能赔，非一刀切）、牙科、视力矫正、美容、高风险运动、精神疾病常在内。买前翻一遍。</p></div>
+      <div class="kw"><h4>8. 续保条件</h4><p>是否保证续保、保几年、到期是否重核保。短期医疗险停售可能无法续，保证续保≠保证终身承保。</p></div>
     </div>
   </div>
 
   <!-- 常见拒赔原因 -->
-  <div class="section">
+  <div class="section" id="deny">
     <h2>商业保险常见拒赔原因（也是粉丝最怕的）</h2>
     <p class="section-desc">不是保险公司「故意不赔」，大多是条款前置条件没满足。提前知道就能避开。</p>
     <ul class="deny-list">
       <li><b>未如实告知</b>：投保时隐瞒早产、黄疸、住院史等，理赔时被发现，可能拒赔并解除合同。</li>
       <li><b>等待期内出险</b>：疾病等待期内确诊或住院，医疗险/重疾险通常不赔。</li>
-      <li><b>属于免责条款</b>：先天性疾病、美容整形、牙科、视力矫正、高风险运动、自杀/自伤等。</li>
+      <li><b>属于免责条款</b>：美容整形、牙科、视力矫正、高风险运动、自杀/自伤等。</li>
       <li><b>既往症</b>：投保前已有的疾病及其并发症，常被除外或拒赔。</li>
       <li><b>未经社保结算</b>：以「有社保」身份投保，但看病没用医保，报销比例可能大幅下降。</li>
-      <li><b>医院/药品不在范围内</b>：去私立医院、非条款约定的医院，或用院外药但产品不含特药责任。</li>
-      <li><b>未达理赔条件</b>：重疾险需确诊约定疾病/状态；医疗险需超过免赔额且为必要合理费用。</li>
+      <li><b>医院/药品不在范围内</b>：去非约定医院，或用院外药但产品不含特药责任。</li>
+      <li><b>未达理赔条件</b>：重疾险需确诊约定疾病/状态或实施约定手术；医疗险需超免赔且为必要合理费用。</li>
       <li><b>保障次数/保额用完</b>：多次赔付重疾次数用尽，或医疗险年度保额已用完。</li>
     </ul>
   </div>
 
-  <!-- 买前必问 10 问 -->
-  <div class="section">
-    <h2>买前必问 10 问（拿着去问销售或自己翻条款）</h2>
-    <p class="section-desc">粉丝搞不懂的地方，浓缩成这 10 个问题。能答清楚，基本不会买错。</p>
+  <!-- 保费参考区间（NEW） -->
+  <div class="section" id="premia">
+    <h2>保费参考区间（不荐产品，只帮建立预算感）</h2>
+    <p class="section-desc">下列为市场常见区间，<b>非报价</b>，受保额、保障期限、被保险人健康状况、产品形态影响很大，具体以投保时产品费率表为准。</p>
+    <table>
+      <tr><th>险种（0岁消费型）</th><th>年保费常见区间</th><th>说明</th></tr>
+      <tr><td>国家医保（居民医保）</td><td>约 300–500 元</td><td>各地差异大，含财政补贴；部分城市新生儿随父母参保</td></tr>
+      <tr><td>百万医疗险</td><td>约 400–800 元</td><td>保证续保年限、是否含特药/CAR-T 影响价格</td></tr>
+      <tr><td>少儿重疾（定期30年，50万）</td><td>约 500–1000 元</td><td>保终身更贵；多次赔付/不分组更贵</td></tr>
+      <tr><td>少儿意外险</td><td>约 60–150 元</td><td>重点看意外医疗责任，身故保额受监管限额</td></tr>
+      <tr><td><b>娃基础保障合计</b></td><td><b>约 1300–2450 元/年</b></td><td>不含教育金；家庭总保费另计入大人部分</td></tr>
+    </table>
+  </div>
+
+  <!-- 理赔实操（NEW） -->
+  <div class="section" id="claims">
+    <h2>买了之后怎么赔：理赔实操</h2>
+    <p class="section-desc">家长不只关心「买什么」，也关心「出事了怎么拿钱」。通用流程如下，具体以条款与保险公司指引为准。</p>
+    <div class="callout blue">
+      <b>报案：</b>知道保险事故后尽快报案，多数产品要求<b>知道事故后 10 日内</b>（具体看条款），可 App/客服电话/代理人报。<br>
+      <b>材料清单（通用）：</b>保单号、被保人身份证/出生证、银行卡；住院：出院小结、发票原件、费用清单、诊断证明、检查报告；意外：事故说明/证明。<b>社保已报销的，商保报「社保结算后的剩余」</b>，记得留好社保结算单。
+    </div>
+    <div class="callout warn">
+      <b>两个易错点：</b>① 百万医疗务必<b>先走社保结算</b>，否则报销比例可能从 100% 掉到 60%；② 重疾险「确诊即赔」是多数，但<b>部分重疾需实施约定手术或达到约定状态</b>（如脑中风后遗症需存活 180 天），别误以为确诊当天就必赔。材料原件至少保留到理赔结案。
+    </div>
+  </div>
+
+  <!-- 如何选择保险公司（NEW） -->
+  <div class="section" id="company">
+    <h2>不只是看产品：如何看保险公司</h2>
+    <p class="section-desc">选保险是「产品 + 公司」双维度。以下为公开可查的参考维度，不唯价格、也不唯名气。</p>
+    <table>
+      <tr><th>看什么</th><th>怎么看</th></tr>
+      <tr><td>偿付能力</td><td>核心/综合偿付能力充足率，监管有红线（综合≥100%、核心≥50% 为达标底线，越高越稳）</td></tr>
+      <tr><td>风险综合评级</td><td>监管分类评级（如 A/B/C/D），A 类更优</td></tr>
+      <tr><td>服务与理赔</td><td>年报披露的理赔获赔率、理赔时效、投诉率；App 报案体验</td></tr>
+      <tr><td>稳定性</td><td>股东背景、经营年限、产品停售频率</td></tr>
+    </table>
+    <div class="callout green">提示：在我国，人寿/健康险公司的保单受《保险法》及保险保障基金机制保护，即便公司风险处置，合法保单权益也受制度安排保障；但不同公司服务体验、续保稳定性确有差异，预算紧可优先保额与条款，服务体验作为加分项。</div>
+  </div>
+
+  <!-- 买前必问 -->
+  <div class="section" id="ask">
+    <h2>买前必问 11 问（拿着去问销售或自己翻条款）</h2>
+    <p class="section-desc">粉丝搞不懂的地方，浓缩成这 11 个问题。能答清楚，基本不会买错。</p>
     <ol class="qa-list">
-      <li>医疗险免赔额多少？社保内外都能报吗？特药/CAR-T 含哪些？</li>
-      <li>重疾险保多少病种？高发的 28 种重疾是否都覆盖？</li>
-      <li>重疾险是单次还是多次赔付？分组还是不分组？有没有「三同条款」？</li>
-      <li>意外险意外医疗免赔额多少？报销比例？是否含社保外用药？</li>
-      <li>是否包含院外药/外购药/特药清单？</li>
+      <li>医疗险免赔额多少？社保内外都能报吗？特药/CAR-T 含哪些、报销比例？</li>
+      <li>重疾险保多少病种？高发的 28 种重疾是否都覆盖？少儿特疾额外赔哪些？</li>
+      <li>重疾险单次还是多次？分组还是不分组？有没有「三同条款」？</li>
+      <li>意外险意外医疗免赔额多少？报销比例？是否含社保外用药？疫苗意外有没有单独等待期？</li>
+      <li>是否包含院外药/外购药/特药清单？CAR-T 赔清单内还是全部疗法？</li>
       <li>疾病等待期多久？意外险有没有等待期？</li>
-      <li>既往症怎么定义？我家娃的情况（如早产、黄疸）算不算？</li>
+      <li>既往症怎么定义？我家娃的情况（如早产、黄疸、卵圆孔）算不算？</li>
       <li>医院范围是二级及以上公立医院普通部吗？特需/国际部报不报？</li>
-      <li>续保条件是什么？保证续保多少年？到期要不要重新核保？</li>
-      <li>免责条款有哪些我容易忽略的？</li>
+      <li>续保条件？保证续保多少年？保证续保≠保证终身承保，到期/停售怎么办？</li>
+      <li>免责条款有哪些我容易忽略的？先天相关疾病的理赔边界？</li>
+      <li>如果宝宝有早产、黄疸住院、卵圆孔未闭等新生儿异常，核保可能给什么结论？会不会做责任除外？</li>
     </ol>
   </div>
 
+  <!-- 对号入座决策表 -->
+  <div class="section" id="match">
+    <h2>对号入座：按你最担心的风险选险种</h2>
+    <p class="section-desc">粉丝群反馈的核心问题，直接对应到险种和条款要点。没有「最完美方案」，只有「最对路配置」。</p>
+    <table>
+      <tr><th style="width:20%">你最担心</th><th style="width:26%">优先配置</th><th style="width:32%">条款重点盯</th><th style="width:22%">常见误区</th></tr>
+      <tr><td><b>大病住院花不起</b></td><td>国家医保 + 百万医疗</td><td>保证续保年限、是否含社保外、特药清单、重疾0免赔</td><td>以为医保全包；忽略1万免赔</td></tr>
+      <tr><td><b>小病门诊/住院也想报</b></td><td>+ 小额医疗险</td><td>免赔额、门诊/住院都报吗、报销比例</td><td>小额医疗多不保证续保，不能替代百万医疗</td></tr>
+      <tr><td><b>医保外用药/进口药</b></td><td>挑含外购药/特药的百万医疗</td><td>特药清单、是否含CAR-T、外购药定义</td><td>普通百万医疗可能只报社保内</td></tr>
+      <tr><td><b>白血病/少儿重疾</b></td><td>+ 少儿重疾险</td><td>保额、少儿特疾额外赔、多次/分组/三同</td><td>把重疾当「报销险」；保额太低；忽略到期风险</td></tr>
+      <tr><td><b>摔伤/烫伤/异物</b></td><td>+ 意外险</td><td>意外医疗免赔额、报销比例、社保内外、疫苗意外等待期</td><td>盲目追高身故保额（监管有限额）</td></tr>
+      <tr><td><b>有早产/黄疸/卵圆孔</b></td><td>先人工核保再投保</td><td>如实告知、核保结论（标体/除外/延期/拒保）</td><td>隐瞒体况，未来拒赔头号原因</td></tr>
+      <tr><td><b>理赔时被拒赔</b></td><td>所有险种</td><td>健康告知、等待期、免责、既往症定义</td><td>隐瞒体况、等待期内体检/住院</td></tr>
+      <tr><td><b>大人保障还没配</b></td><td><b style="color:#C0392B">停！先给经济支柱配齐</b></td><td>父母的重疾+医疗+定寿/意外</td><td>大人是娃最大的「保险」</td></tr>
+    </table>
+    <div class="callout warn">
+      <b>📌 下单前最后 5 句大实话：</b>① 国家医保先办，商业险只是补充；② 大人是娃的「保险」，自己先配齐；③ 定期重疾有到期风险，预算够优先终身或组合；④ 宝宝有早产/住院史，优先选支持人工核保的产品，别只走智能核保；⑤ 一切「保额/保费/健康告知/免责/核保结论」以投保时条款与保险公司为准，本页不荐具体产品。
+    </div>
+  </div>
+
+  <!-- 中高端医疗简介（NEW） -->
+  <div class="section" id="midhigh">
+    <h2>延伸：中高端医疗险（预算充足家庭可选）</h2>
+    <p class="section-desc">一线城市或对就医品质有要求的家庭，可能在意特需/国际部、私立医院、直付体验。</p>
+    <div class="callout blue">
+      <b>特点：</b>覆盖公立医院特需/国际部、部分私立医院；<b>0 免赔</b>、可<b>直付</b>（医院与保险公司直接结算，不用自己垫）；保障责任更宽。<br>
+      <b>代价：</b>年保费通常 <b>2000–10000+ 元</b>（远高于百万医疗），对体况和健康告知要求也更严。<br>
+      <b>定位：</b>是在「医保+百万医疗+重疾+意外」基础之上的<b>品质升级</b>，非刚需；预算紧先把基础四件套配齐。
+    </div>
+  </div>
+
   <!-- 三大避坑 -->
-  <div class="section">
+  <div class="section" id="pit">
     <h2>新手爸妈三大坑（看到就绕开）</h2>
     <div class="pit">
       <div class="p">
@@ -206,41 +344,37 @@
       <div class="p">
         <h3>坑3 · 忽视告知与等待期</h3>
         <div class="bad">✗ 带病投保 / 等待期内出险，大概率不赔还白交。</div>
-        <div class="good">✓ 如实健康告知，早买早过等待期，别拖。</div>
+        <div class="good">✓ 如实健康告知，早买早过等待期，别拖；有体况走人工核保。</div>
       </div>
     </div>
+    <div class="callout warn"><b>教育金提醒：</b>教育金/寿险非保障刚需，预算紧可暂缓；若配置，务必先配齐医保+重疾+医疗+意外全部基础保障。<b>教育金流动性弱，前期退保损失大，不要优先购买。</b></div>
   </div>
 
-  <!-- 对号入座决策表（核心截图点） -->
-  <div class="section">
-    <h2>对号入座：按你最担心的风险选险种</h2>
-    <p class="section-desc">粉丝群反馈的核心问题，直接对应到险种和条款要点。没有「最完美的方案」，只有「最对路的配置」。</p>
-    <table>
-      <tr><th style="width:20%">你最担心</th><th style="width:28%">优先配置</th><th style="width:30%">条款重点盯</th><th style="width:22%">常见误区</th></tr>
-      <tr><td><b>大病住院花不起</b></td><td>国家医保 + 百万医疗</td><td>保证续保年限、是否含社保外、特药清单</td><td>以为医保全包；忽略1万免赔额</td></tr>
-      <tr><td><b>小病门诊/住院也想报</b></td><td>+ 小额医疗险</td><td>免赔额、门诊/住院都报吗、报销比例</td><td>小额医疗保额低，不能替代百万医疗</td></tr>
-      <tr><td><b>医保外用药/进口药</b></td><td>挑含外购药/特药的百万医疗</td><td>特药清单、是否含CAR-T、外购药定义</td><td>普通百万医疗可能只报社保内</td></tr>
-      <tr><td><b>白血病/少儿重疾</b></td><td>+ 少儿重疾险</td><td>保额、少儿特疾额外赔、多次赔付/分组</td><td>把重疾当「报销险」；保额买太低</td></tr>
-      <tr><td><b>摔伤/烫伤/异物</b></td><td>+ 意外险</td><td>意外医疗免赔额、报销比例、社保内外</td><td>盲目追求高身故保额（监管有限额）</td></tr>
-      <tr><td><b>理赔时被拒赔</b></td><td>所有险种</td><td>健康告知、等待期、免责条款、既往症定义</td><td>隐瞒体况、等待期内体检/住院</td></tr>
-      <tr><td><b>大人保障还没配</b></td><td><b style="color:#C0392B">停！先给经济支柱配齐</b></td><td>父母的重疾+医疗+定寿/意外</td><td>大人是娃最大的「保险」</td></tr>
-    </table>
-    <div class="callout warn">
-      <b>📌 下单前最后 3 句大实话：</b>① 国家医保先办，商业险只是补充；② 大人是娃的「保险」，自己先配齐；③ 所有「保额/保费/健康告知/免责」以投保时条款与核保结论为准，本页不荐具体产品。
+  <!-- FAQ（NEW） -->
+  <div class="section" id="faq">
+    <h2>常见问题 FAQ</h2>
+    <div class="qa-list" style="counter-reset:none;">
+      <p style="font-size:13.5px;padding:8px 0;border-bottom:1px dashed #eee;"><b>Q：28 天内能买商业健康险吗？</b><br>A：基本不能。绝大多数重疾/百万医疗要求出生满 28 天且健康出院；少数意外险满 7 天可投。先办落地险。</p>
+      <p style="font-size:13.5px;padding:8px 0;border-bottom:1px dashed #eee;"><b>Q：早产儿能买吗？</b><br>A：多数需满 28 天且健康出院，早产/低体重常触发核保，可能延期或需人工核保，结论以保险公司为准。</p>
+      <p style="font-size:13.5px;padding:8px 0;border-bottom:1px dashed #eee;"><b>Q：有黄疸能买吗？</b><br>A：生理性黄疸消退后通常可标体；病理性黄疸需提供病历资料走核保，勿隐瞒。</p>
+      <p style="font-size:13.5px;padding:8px 0;border-bottom:1px dashed #eee;"><b>Q：卵圆孔未闭能买吗？</b><br>A：多数 ≤3mm 且有自愈趋势可标体或除外，需核保；具体看缺损大小与复查结果。</p>
+      <p style="font-size:13.5px;padding:8px 0;border-bottom:1px dashed #eee;"><b>Q：医保和商保怎么衔接报销？</b><br>A：先社保结算，拿结算单给商保报「剩余部分」；百万医疗未经社保结算报销比例会降。</p>
+      <p style="font-size:13.5px;padding:8px 0;"><b>Q：定期重疾到期买不到怎么办？</b><br>A：预算够优先终身，或「定期+终身」组合锁部分终身保障；别等到期前才补。</p>
     </div>
   </div>
 
   <!-- 医保政策严谨卡 -->
-  <div class="section">
+  <div class="section" id="medicare">
     <h2>⚠ 国家医保（落地险）：这条最容易踩地方政策</h2>
     <div class="callout blue">
-      <b>新生儿「落地险」关键点：</b>出生后按规定时限内参保，通常可<b>追溯报销出生起的医疗费</b>。但<b>参保窗口期各地不同</b>——常见为出生后 <b>90 天内</b>，部分城市放宽至 <b>6 个月内</b>（以当地为准）。<br>
-      <b>办理：</b>在户籍地或居住证所在地办居民医保，出生后<b>尽快办、别拖过窗口</b>。具体天数、材料、渠道以<b>当地医保局/税务窗口最新发布</b>为准，本页不给死数。
+      <b>新生儿「落地险」关键点：</b>出生后按规定时限内参保，通常可<b>追溯报销出生起的医疗费</b>。但<b>参保窗口期各地差异大</b>——常见为出生后 <b>28天 / 90天 / 6个月内</b>不等（以当地为准，务必以当地医保局公布为准）。<br>
+      <b>办理：</b>在户籍地或居住证所在地办居民医保，出生后<b>尽快办、别拖过窗口</b>。<br>
+      <b>查询方式：</b>拨打 <b>12333</b>（人社服务热线）/ <b>12393</b>（医疗保障服务热线），或微信搜「XX省/市医保局」公众号，关键词「新生儿参保」「城乡居民医保」。具体天数、材料、渠道以<b>当地医保局/税务窗口最新发布</b>为准，本页不给死数。
     </div>
   </div>
 
   <div class="disclaimer">
-    免责声明：本页为保险科普内容，讲解新生儿保险的配置逻辑与条款关注点，<b>不构成保险销售、投保或理赔建议，亦非对任何产品的推荐</b>。具体险种、责任范围、保费、健康告知、核保结论、免责条款与理赔结果，以保险公司经监管批复的条款及投保时如实告知为准；未成年人身故保额限制等以监管规定为准；各地医保政策以当地官方最新发布为准。购买前请咨询持牌专业人员或保险公司官方渠道。文中预算比例、报销比例为通用参考，非硬性指标。
+    免责声明：本页为母婴科普内容创作者「葵爸」整理的个人学习笔记，讲解新生儿保险的配置逻辑与条款关注点。<b>作者非持牌保险经纪人/代理人，无精算/医学执业资质；本页不构成保险销售、投保或理赔建议，亦非对任何产品的推荐。</b>具体险种、责任范围、保费、健康告知、核保结论、免责条款与理赔结果，以保险公司经监管批复的条款及投保时如实告知为准；未成年人身故保额限制等以监管规定为准；各地医保政策以当地官方最新发布为准。购买前请咨询持牌专业人员或保险公司官方渠道。文中预算比例、费率区间、报销比例为通用参考，非硬性指标，产品可能随时调整。
   </div>
 </div>
 
